@@ -1,0 +1,13 @@
+# Backtest configuration
+# Store dates, a static universe, and data frequency in YAML.
+# Avoid hardcoding these values in Python code.
+
+start_date: "2020-01-01"
+end_date: "2025-12-31"
+
+# Static, liquid, tech-heavy universe for mechanics testing
+universe_symbols: [AAPL, MSFT, AMZN, GOOGL, META, NVDA, TSLA, NFLX, ORCL, CRM, ADBE, INTC, AMD, QCOM, CSCO]
+
+# Supported values: daily (initial focus)
+data_frequency: "daily"
+
