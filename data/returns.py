@@ -168,14 +168,48 @@ def calculate_returns(
     if len(returns) == 0:
         raise ValueError("Returns matrix is empty after removing first NaN row")
     
-    # Assert no NaNs in final returns (data quality check)
+    # === Sanity Assertions (MANDATORY) ===
+    # Fail loudly - silent errors are fatal
+    
+    # Assertion 1: No NaNs
     if returns.isna().any().any():
         nan_count = returns.isna().sum().sum()
         nan_cols = returns.isna().sum()[returns.isna().sum() > 0]
         raise ValueError(
-            f"Found {nan_count} NaNs in returns matrix. "
+            f"ASSERTION FAILED: Found {nan_count} NaNs in returns matrix. "
             f"Columns with NaNs: {nan_cols.to_dict()}. "
             "This indicates a data quality issue in the price matrix."
+        )
+    
+    # Assertion 2: No infinite values
+    import numpy as np
+    if np.isinf(returns.values).any():
+        inf_count = np.isinf(returns.values).sum()
+        # Find which columns have infinite values
+        inf_cols = [col for col in returns.columns if np.isinf(returns[col]).any()]
+        raise ValueError(
+            f"ASSERTION FAILED: Found {inf_count} infinite values in returns matrix. "
+            f"Columns with infinities: {inf_cols}. "
+            "This typically indicates zero or near-zero prices (division by zero)."
+        )
+    
+    # Assertion 3: Same columns as prices
+    if not returns.columns.equals(price_matrix.columns):
+        missing_in_returns = set(price_matrix.columns) - set(returns.columns)
+        extra_in_returns = set(returns.columns) - set(price_matrix.columns)
+        raise ValueError(
+            f"ASSERTION FAILED: Returns columns don't match price columns. "
+            f"Missing in returns: {missing_in_returns}. "
+            f"Extra in returns: {extra_in_returns}."
+        )
+    
+    # Assertion 4: Length = len(prices) - 1
+    expected_length = len(price_matrix) - 1
+    if len(returns) != expected_length:
+        raise ValueError(
+            f"ASSERTION FAILED: Expected {expected_length} returns (len(prices) - 1), "
+            f"but got {len(returns)}. "
+            f"Price matrix has {len(price_matrix)} rows."
         )
     
     return returns
