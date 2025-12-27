@@ -42,3 +42,12 @@ Institutional-grade, multi-asset backtesting and risk attribution engine designe
   - Introduce dynamic universe handling and sector/correlation caps.
   - Implement stress testing and scenario analysis; add nonlinear/impact cost models.
   - Optional: allocate costs by asset for net-of-cost attribution and add rolling risk contribution plots.
+
+---
+
+## Research Paper
+For the complete methodology, results, and narrative, see the accompanying research memo:
+
+- [research_paper/VectorAlpha.pdf](research_paper/VectorAlpha.pdf)
+
+This paper provides the quantitative rationale behind design choices, detailed attribution analyses (including the 2022 drawdown), and recommendations for PM workflows.
