@@ -8,8 +8,11 @@ from config.loader import load_settings
 import argparse
 from pathlib import Path
 from validation.preflight import run_preflight
-from data.prices import load_price_matrix, save_price_matrix
-from data.returns import calculate_returns, save_returns
+from data.prices import load_price_matrix, save_price_matrix, load_processed_prices
+from data.returns import calculate_returns, save_returns, load_processed_returns
+from features.feature_engine import build_features
+from backtest.rebalance import get_weekly_rebalance_dates
+from strategies.equal_weight import EqualWeightStrategy
 
 
 def _handle_rebuild(settings) -> None:
@@ -46,7 +49,7 @@ def main(rebuild: bool = False) -> None:
     No strategies, no portfolio logic yet.
     """
     print("=" * 60)
-    print("QUANT BACKTESTING ENGINE - DATA PREPARATION")
+    print("VectorAlpha - Data Preparation")
     print("=" * 60)
     
     # Step 1: Load config
@@ -95,7 +98,52 @@ def main(rebuild: bool = False) -> None:
     print(f"  Saving processed returns to {settings.paths.returns_file}")
     save_returns(returns, output_path=settings.paths.returns_file)
     
-    # Step 8: Exit
+    # Step 8: Glue logic (temporary integration test)
+    print("\n[GLUE] Testing strategy integration...")
+    
+    # Load processed data
+    prices = load_processed_prices(settings.paths.prices_file)
+    returns = load_processed_returns(settings.paths.returns_file)
+    
+    # Build features
+    features = build_features(prices, returns)
+    
+    # Get rebalance calendar
+    rebalance_dates = get_weekly_rebalance_dates(prices.index)
+    
+    # Generate weights
+    strategy = EqualWeightStrategy()
+    weights = strategy.generate_weights(features, rebalance_dates)
+    
+    # Checks (fail fast)
+    print("  + Running weight validation checks...")
+    
+    # Check 1: Weight sums ≈ 1 (floating-point tolerance)
+    weight_sums = weights.sum(axis=1)
+    if not (weight_sums - 1.0).abs().max() < 1e-6:
+        raise ValueError(f"Weight sums != 1.0 (max deviation: {(weight_sums - 1.0).abs().max()})")
+    print("    - Weight sums ≈ 1.0 ✓")
+    
+    # Check 2: No weights on non-rebalance days (weights index must match rebalance_dates exactly)
+    rebalance_set = set(rebalance_dates)
+    weights_set = set(weights.index)
+    if weights_set != rebalance_set:
+        raise ValueError(f"Weights contain non-rebalance dates (expected {len(rebalance_dates)}, got {len(weights)})")
+    print("    - No weights on non-rebalance days ✓")
+    
+    # Check 3: No NaNs on rebalance dates
+    if weights.isna().any().any():
+        raise ValueError("NaNs found in weights on rebalance dates")
+    print("    - No NaNs on rebalance dates ✓")
+    
+    # Print diagnostics
+    print(f"  + Rebalance dates: {len(rebalance_dates)}")
+    print(f"  + Weight matrix shape: {weights.shape}")
+    print(f"  + Sum of weights per rebalance (first 5):")
+    for date in rebalance_dates[:5]:
+        print(f"    {date.date()}: {weights.loc[date].sum():.6f}")
+    
+    # Step 9: Exit
     print("\nComplete!")
     print("=" * 60)
     print("\nClean market data layer ready:")
@@ -105,7 +153,7 @@ def main(rebuild: bool = False) -> None:
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Quant backtesting engine orchestrator")
+    parser = argparse.ArgumentParser(description="VectorAlpha orchestrator")
     parser.add_argument("--rebuild", action="store_true", help="Recompute processed data (delete Parquet, do not touch raw)")
     args = parser.parse_args()
     main(rebuild=args.rebuild)

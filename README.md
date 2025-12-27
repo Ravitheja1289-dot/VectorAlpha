@@ -1,4 +1,4 @@
-# quant-backtesting-engine
+# VectorAlpha
 
 A production-grade quantitative backtesting engine for portfolio strategies.
 
