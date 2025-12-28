@@ -65,7 +65,7 @@ def main() -> None:
     symbol = settings.universe_symbols[0]
 
     print(f"Symbol: {symbol}")
-    print(f"Date range (config): {settings.start_date} → {settings.end_date}")
+    print(f"Date range (config): {settings.start_date} -> {settings.end_date}")
     print(f"Frequency (config): {settings.data_frequency}")
 
     loader = YahooLoader()

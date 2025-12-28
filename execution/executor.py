@@ -35,7 +35,7 @@ def _drift_weights(
     Parameters
     ----------
     current_weights : pd.Series
-        Current portfolio weights (asset → weight)
+        Current portfolio weights (asset -> weight)
     returns : pd.Series
         Daily returns for all assets
         
@@ -107,11 +107,11 @@ def execute_strategy(
     Parameters
     ----------
     prices : pd.DataFrame
-        Daily prices (dates × assets)
+        Daily prices (dates x assets)
     returns : pd.DataFrame
-        Daily returns (dates × assets)
+        Daily returns (dates x assets)
     target_weights : pd.DataFrame
-        Target weights on rebalance dates (rebalance_dates × assets)
+        Target weights on rebalance dates (rebalance_dates x assets)
     rebalance_dates : List[pd.Timestamp]
         Rebalance dates (subset of trading dates)
     cost_bps : float, default=10.0
@@ -121,7 +121,7 @@ def execute_strategy(
     -------
     dict
         {
-            'daily_weights': pd.DataFrame (daily × assets),
+            'daily_weights': pd.DataFrame (daily x assets),
             'turnover': pd.Series (rebalance_dates),
             'transaction_costs': pd.Series (rebalance_dates),
         }
@@ -219,7 +219,7 @@ def execute_strategy(
     # Sanity checks (MANDATORY)
     print("\nRunning sanity checks...")
     
-    # Check 1: Daily weights sum ≈ 1 (for non-NaN rows)
+    # Check 1: Daily weights sum ~= 1 (for non-NaN rows)
     # Note: Days before first rebalance may be NaN
     weight_sums = daily_weights.sum(axis=1, skipna=True)
     # Only check rows where we have valid weights (at least one non-NaN value)

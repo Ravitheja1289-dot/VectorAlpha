@@ -118,23 +118,23 @@ def main(rebuild: bool = False) -> None:
     # Checks (fail fast)
     print("  + Running weight validation checks...")
     
-    # Check 1: Weight sums ≈ 1 (floating-point tolerance)
+    # Check 1: Weight sums ~= 1 (floating-point tolerance)
     weight_sums = weights.sum(axis=1)
     if not (weight_sums - 1.0).abs().max() < 1e-6:
         raise ValueError(f"Weight sums != 1.0 (max deviation: {(weight_sums - 1.0).abs().max()})")
-    print("    - Weight sums ≈ 1.0 ✓")
+    print("    - Weight sums ~= 1.0 [OK]")
     
     # Check 2: No weights on non-rebalance days (weights index must match rebalance_dates exactly)
     rebalance_set = set(rebalance_dates)
     weights_set = set(weights.index)
     if weights_set != rebalance_set:
         raise ValueError(f"Weights contain non-rebalance dates (expected {len(rebalance_dates)}, got {len(weights)})")
-    print("    - No weights on non-rebalance days ✓")
+    print("    - No weights on non-rebalance days [OK]")
     
     # Check 3: No NaNs on rebalance dates
     if weights.isna().any().any():
         raise ValueError("NaNs found in weights on rebalance dates")
-    print("    - No NaNs on rebalance dates ✓")
+    print("    - No NaNs on rebalance dates [OK]")
     
     # Print diagnostics
     print(f"  + Rebalance dates: {len(rebalance_dates)}")

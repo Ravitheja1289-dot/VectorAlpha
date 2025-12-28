@@ -62,12 +62,12 @@ def _ensure_date_coverage(settings: Settings) -> None:
         if max_dt < start:
             raise ValueError(
                 f"Preflight: {symbol} has no data on/after start_date. "
-                f"Coverage {min_dt.date()}→{max_dt.date()}, start={start.date()}"
+                f"Coverage {min_dt.date()}->{max_dt.date()}, start={start.date()}"
             )
         if min_dt > end:
             raise ValueError(
                 f"Preflight: {symbol} has no data on/before end_date. "
-                f"Coverage {min_dt.date()}→{max_dt.date()}, end={end.date()}"
+                f"Coverage {min_dt.date()}->{max_dt.date()}, end={end.date()}"
             )
 
 

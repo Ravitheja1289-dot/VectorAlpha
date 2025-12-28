@@ -2,7 +2,7 @@
 Prices Module
 
 Responsibility:
-    Convert raw per-asset CSVs → clean multi-asset price matrix
+    Convert raw per-asset CSVs -> clean multi-asset price matrix
 
 This module reads individual CSV files from the raw data directory and combines
 them into a single DataFrame with dates as index and tickers as columns.
@@ -18,8 +18,8 @@ import pandas as pd
 
 
 # === File Format Policy ===
-# Raw → CSV (human-readable, audit trail)
-# Processed → Parquet (columnar, fast, industry standard)
+# Raw -> CSV (human-readable, audit trail)
+# Processed -> Parquet (columnar, fast, industry standard)
 # This separation matters: you're past the audit layer now.
 
 
@@ -40,12 +40,12 @@ def load_price_matrix(
     When apply_missing_data_policy=True (RECOMMENDED):
     1. Drop dates before each asset's first valid price
     2. Forward-fill (ffill) missing prices within an asset's trading history
-    3. NEVER backward-fill (would introduce future information → illegal)
+    3. NEVER backward-fill (would introduce future information -> illegal)
 
     Why This Policy:
     - Forward-fill mimics "last traded price" (realistic market behavior)
     - Backward-fill leaks future data into the past (look-ahead bias)
-    - Assets start trading on different dates → NaNs before first price are expected
+    - Assets start trading on different dates -> NaNs before first price are expected
 
     Parameters
     ----------
@@ -97,7 +97,7 @@ def load_price_matrix(
     price_data = {}
     
     for csv_file in csv_files:
-        ticker = csv_file.stem  # Get filename without extension (e.g., "AAPL.csv" → "AAPL")
+        ticker = csv_file.stem  # Get filename without extension (e.g., "AAPL.csv" -> "AAPL")
         
         try:
             # Step 1: Read CSV from data/raw/
@@ -123,7 +123,7 @@ def load_price_matrix(
             price_series = df[[price_column]].copy()
             price_series[price_column] = pd.to_numeric(price_series[price_column], errors='coerce')
             
-            # Step 5: Rename column → ticker symbol
+            # Step 5: Rename column -> ticker symbol
             price_series.rename(columns={price_column: ticker}, inplace=True)
             
             # Store the price series
@@ -138,14 +138,14 @@ def load_price_matrix(
     
     # Combine all assets column-wise into one DataFrame
     # Target shape:
-    #   index   → DatetimeIndex (trading days)
-    #   columns → AAPL, MSFT, ...
-    #   values  → Adjusted Close prices
+    #   index   -> DatetimeIndex (trading days)
+    #   columns -> AAPL, MSFT, ...
+    #   values  -> Adjusted Close prices
     price_matrix = pd.DataFrame(price_data)
-    print("Combining assets into price matrix (dates × tickers)...")
+    print("Combining assets into price matrix (dates x tickers)...")
     
     # At this stage: NaNs are EXPECTED
-    # Date ranges differ across assets → that's fine
+    # Date ranges differ across assets -> that's fine
     # NaN handling comes later based on fill_method
     
     # === Apply Alignment (Carefully) ===
@@ -191,7 +191,7 @@ def load_price_matrix(
         # Step 4: Forward-fill missing prices
         # Why: Mimics "last traded price" (realistic market behavior)
         # Note: Only fills WITHIN the common date range (after step 3)
-        # NEVER backward-fill → would introduce future information → illegal
+        # NEVER backward-fill -> would introduce future information -> illegal
         price_matrix.ffill(inplace=True)
         
         # Step 5: Drop any remaining NaNs
@@ -200,7 +200,7 @@ def load_price_matrix(
         price_matrix.dropna(inplace=True)
     
     # === Hard Assertions (MANDATORY) ===
-    # These checks MUST pass. If they fail → FIX DATA, don't silence the error.
+    # These checks MUST pass. If they fail -> FIX DATA, don't silence the error.
     
     # Assertion 1: Index is strictly increasing
     if not price_matrix.index.is_monotonic_increasing:
@@ -256,8 +256,8 @@ def save_price_matrix(
 
     File Format Policy:
     -------------------
-    Raw → CSV (human-readable, audit trail, transparency)
-    Processed → Parquet (performance, efficiency, production-ready)
+    Raw -> CSV (human-readable, audit trail, transparency)
+    Processed -> Parquet (performance, efficiency, production-ready)
     
     This separation matters: you're past the audit layer now.
 
@@ -272,7 +272,7 @@ def save_price_matrix(
     --------
     >>> prices = load_price_matrix()
     >>> save_price_matrix(prices)
-    Saved 1234 rows × 15 assets to data/processed/prices.parquet
+    Saved 1234 rows x 15 assets to data/processed/prices.parquet
     """
     output_path = Path(output_path)
     
@@ -288,7 +288,7 @@ def save_price_matrix(
         index=True,  # Preserve DatetimeIndex
     )
     
-    print(f"Saved {len(price_matrix)} rows × {len(price_matrix.columns)} assets to {output_path}")
+    print(f"Saved {len(price_matrix)} rows x {len(price_matrix.columns)} assets to {output_path}")
 
 
 def load_processed_prices(
@@ -379,6 +379,6 @@ if __name__ == "__main__":
     assert loaded_prices.shape == prices.shape, "Shape mismatch after save/load"
     assert (loaded_prices.columns == prices.columns).all(), "Columns mismatch"
     assert (loaded_prices.index == prices.index).all(), "Index mismatch"
-    print("✓ Verification passed: Parquet save/load works correctly")
+    print("[OK] Verification passed: Parquet save/load works correctly")
     print(f"\nFile location: data/processed/prices.parquet")
     print("\nNext time, use load_processed_prices() for instant loading (10-100x faster)")

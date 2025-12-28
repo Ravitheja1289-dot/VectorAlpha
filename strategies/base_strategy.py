@@ -59,7 +59,7 @@ class Strategy(ABC):
         ----------
         features : Dict[str, pd.DataFrame]
             Feature DataFrames (e.g., {"daily_returns": ..., "vol_20d": ..., "mom_20d": ...})
-            Each DataFrame has shape (dates × assets) aligned with prices
+            Each DataFrame has shape (dates x assets) aligned with prices
         rebalance_dates : List[pd.Timestamp]
             Dates on which to rebalance (typically weekly or monthly)
         

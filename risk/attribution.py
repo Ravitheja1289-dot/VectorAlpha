@@ -97,8 +97,8 @@ def compute_risk_attribution(
 ) -> Dict[str, object]:
 	"""Volatility-based risk attribution using average weights.
 
-	σ_p = sqrt(w' Σ w)
-	MC_i = (Σ w)_i / σ_p
+	sigma_p = sqrt(w' Sigma w)
+	MC_i = (Sigma w)_i / sigma_p
 	RC_i = w_i * MC_i
 	"""
 	weights, rets = _align_assets(daily_weights, returns)

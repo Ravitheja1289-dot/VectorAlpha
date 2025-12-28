@@ -15,7 +15,7 @@ def annualized_volatility(returns: pd.Series) -> float:
     """
     Annualized volatility of daily returns.
     
-    σ_ann = σ_daily × √252
+    sigma_ann = sigma_daily * sqrt(252)
     
     Parameters
     ----------
@@ -68,7 +68,7 @@ def sharpe_ratio(returns: pd.Series, risk_free_rate: float = 0.0) -> float:
     """
     Sharpe ratio with annualization.
     
-    Sharpe = [mean(r_daily) - rf] / σ_daily × √252
+    Sharpe = [mean(r_daily) - rf] / sigma_daily * sqrt(252)
     
     Parameters
     ----------
@@ -146,7 +146,7 @@ def rolling_volatility(returns: pd.Series, window: int = 63) -> pd.Series:
     returns : pd.Series
         Daily portfolio returns
     window : int, optional
-        Rolling window in trading days (default 63 ≈ 3 months)
+        Rolling window in trading days (default 63 ~= 3 months)
     
     Returns
     -------
@@ -166,7 +166,7 @@ def rolling_sharpe(returns: pd.Series, window: int = 63, risk_free_rate: float =
     returns : pd.Series
         Daily portfolio returns
     window : int, optional
-        Rolling window in trading days (default 63 ≈ 3 months)
+        Rolling window in trading days (default 63 ~= 3 months)
     risk_free_rate : float, optional
         Annual risk-free rate (default 0.0)
     
@@ -194,7 +194,7 @@ def rolling_max_drawdown(equity_curve: pd.Series, window: int = 63) -> pd.Series
     equity_curve : pd.Series
         Daily equity values (indexed by date)
     window : int, optional
-        Rolling window in trading days (default 63 ≈ 3 months)
+        Rolling window in trading days (default 63 ~= 3 months)
     
     Returns
     -------
@@ -229,7 +229,7 @@ def compute_risk_metrics(
     risk_free_rate : float, optional
         Annual risk-free rate (default 0.0)
     rolling_window : int, optional
-        Rolling window in trading days (default 63 ≈ 3 months)
+        Rolling window in trading days (default 63 ~= 3 months)
     
     Returns
     -------

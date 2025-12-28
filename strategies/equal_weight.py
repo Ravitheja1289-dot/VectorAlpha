@@ -9,7 +9,7 @@ Why this matters:
 - Tests rebalancing logic
 - Tests interfaces
 - No alpha distractions
-- If equal-weight breaks later → your system is broken
+- If equal-weight breaks later -> your system is broken
 """
 from __future__ import annotations
 
@@ -65,7 +65,7 @@ class EqualWeightStrategy(Strategy):
         # Equal weight for each asset
         equal_weight = 1.0 / n_assets
         
-        # Create DataFrame: rebalance_dates × assets, all values = 1/N
+        # Create DataFrame: rebalance_dates x assets, all values = 1/N
         weights = pd.DataFrame(
             data=equal_weight,
             index=rebalance_dates,

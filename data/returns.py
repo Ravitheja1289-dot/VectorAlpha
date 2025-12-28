@@ -2,13 +2,13 @@
 Returns Module
 
 Single Responsibility:
-    Convert aligned prices → aligned returns
+    Convert aligned prices -> aligned returns
 
 Pipeline Discipline (ENFORCED):
     MUST load from data/processed/prices.parquet
     NEVER recompute from raw CSVs here
     
-This enforces proper data flow: raw → processed prices → returns
+This enforces proper data flow: raw -> processed prices -> returns
 
 Nothing else belongs here.
 """
@@ -44,8 +44,8 @@ def load_prices_for_returns(
     Never recompute prices from raw here.
     
     This enforces proper data flow:
-    1. Raw CSVs → processed prices (via data/prices.py)
-    2. Processed prices → returns (via data/returns.py)
+    1. Raw CSVs -> processed prices (via data/prices.py)
+    2. Processed prices -> returns (via data/returns.py)
     
     Parameters
     ----------
@@ -83,7 +83,7 @@ def calculate_returns(
     method: Literal["simple"] = "simple",
 ) -> pd.DataFrame:
     """
-    Convert aligned prices → aligned returns.
+    Convert aligned prices -> aligned returns.
     
     Return Computation Rules (MANDATORY):
     --------------------------------------
@@ -93,9 +93,9 @@ def calculate_returns(
     4. NEVER shift prices forward (creates look-ahead bias)
     
     Result Shape:
-    - index   → Date (starts one day after first price date)
-    - columns → Assets (same as price matrix)
-    - values  → Returns (simple returns: r_t = P_t/P_{t-1} - 1)
+    - index   -> Date (starts one day after first price date)
+    - columns -> Assets (same as price matrix)
+    - values  -> Returns (simple returns: r_t = P_t/P_{t-1} - 1)
     
     Example: If prices start 2020-01-02, returns start 2020-01-03
     
@@ -223,9 +223,9 @@ def save_returns(
     Persist returns matrix to Parquet format.
     
     File Format Policy:
-    - Raw prices → CSV (audit trail)
-    - Processed prices → Parquet (performance)
-    - Returns → Parquet (performance)
+    - Raw prices -> CSV (audit trail)
+    - Processed prices -> Parquet (performance)
+    - Returns -> Parquet (performance)
     
     Parameters
     ----------
@@ -238,7 +238,7 @@ def save_returns(
     --------
     >>> returns = calculate_returns(prices)
     >>> save_returns(returns)
-    Saved 1504 rows × 15 assets to data/processed/returns.parquet
+    Saved 1504 rows x 15 assets to data/processed/returns.parquet
     """
     output_path = Path(output_path)
     
@@ -254,7 +254,7 @@ def save_returns(
         index=True,
     )
     
-    print(f"Saved {len(returns)} rows × {len(returns.columns)} assets to {output_path}")
+    print(f"Saved {len(returns)} rows x {len(returns.columns)} assets to {output_path}")
 
 
 def load_processed_returns(
@@ -297,7 +297,7 @@ def load_processed_returns(
 
 
 if __name__ == "__main__":
-    # Demo: Convert prices → returns
+    # Demo: Convert prices -> returns
     import sys
     from pathlib import Path
     sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -309,13 +309,13 @@ if __name__ == "__main__":
     print("\n[1/3] Loading prices from Parquet (ENFORCED)...")
     print("  Source: data/processed/prices.parquet")
     prices = load_prices_for_returns()
-    print(f"  ✓ Loaded {len(prices)} days × {len(prices.columns)} assets")
+    print(f"  [OK] Loaded {len(prices)} days x {len(prices.columns)} assets")
     print(f"  Date range: {prices.index.min().date()} to {prices.index.max().date()}")
     print("  (Never recomputing from raw - pipeline discipline enforced)")
     
     print("\n[2/3] Calculating returns...")
     returns = calculate_returns(prices)
-    print(f"  ✓ Calculated {len(returns)} days × {len(returns.columns)} assets")
+    print(f"  [OK] Calculated {len(returns)} days x {len(returns.columns)} assets")
     print(f"  Date range: {returns.index.min().date()} to {returns.index.max().date()}")
     print(f"  (Lost 1 day due to pct_change)")
     
@@ -328,7 +328,7 @@ if __name__ == "__main__":
     print("\n[5/5] Verification...")
     loaded_returns = load_processed_returns()
     assert loaded_returns.shape == returns.shape
-    print("  ✓ Verification passed")
+    print("  [OK] Verification passed")
     
     print("\n" + "=" * 60)
     print("COMPLETE")

@@ -2,7 +2,7 @@
 Portfolio Engine
 
 Responsibility:
-- Convert daily weights + returns → portfolio PnL
+- Convert daily weights + returns -> portfolio PnL
 - Apply transaction costs
 - Track equity over time
 
@@ -38,10 +38,10 @@ def calculate_portfolio_returns(
     Parameters
     ----------
     daily_weights : pd.DataFrame
-        Daily portfolio weights (dates × assets)
+        Daily portfolio weights (dates x assets)
         Shape: (n_days, n_assets)
     returns : pd.DataFrame
-        Daily asset returns (dates × assets)
+        Daily asset returns (dates x assets)
         Shape: (n_days, n_assets)
     transaction_costs : pd.Series
         Transaction costs on rebalance dates (as fraction of portfolio)
@@ -61,7 +61,7 @@ def calculate_portfolio_returns(
     Portfolio return formula:
         r_portfolio_t = sum(w_{t-1}^i * r_t^i)
         
-    ⚠️ CRITICAL: Use YESTERDAY's weights with TODAY's returns to avoid look-ahead bias
+    [WARNING] CRITICAL: Use YESTERDAY's weights with TODAY's returns to avoid look-ahead bias
         
     Transaction costs are tracked separately and subtracted from returns for clean accounting.
     This makes cost attribution easier later.
@@ -81,7 +81,7 @@ def calculate_portfolio_returns(
     
     # Calculate gross portfolio returns (before costs)
     # r_portfolio_t = sum(w_{t-1}^i * r_t^i)
-    # ⚠️ CRITICAL: Use YESTERDAY's weights with TODAY's returns to avoid look-ahead bias
+    # [WARNING] CRITICAL: Use YESTERDAY's weights with TODAY's returns to avoid look-ahead bias
     # daily_weights[t] = position at END of day t
     # returns[t] = return DURING day t
     # So we need weights[t-1] with returns[t]
@@ -191,14 +191,14 @@ def run_backtest(
     transaction_costs: pd.Series,
     initial_capital: float = 1.0,
 ) -> Dict[str, pd.Series]:
-    """Run full backtest: weights + returns → equity curve.
+    """Run full backtest: weights + returns -> equity curve.
     
     Parameters
     ----------
     daily_weights : pd.DataFrame
-        Daily portfolio weights (dates × assets)
+        Daily portfolio weights (dates x assets)
     returns : pd.DataFrame
-        Daily asset returns (dates × assets)
+        Daily asset returns (dates x assets)
     transaction_costs : pd.Series
         Transaction costs on rebalance dates
     initial_capital : float, default=1.0

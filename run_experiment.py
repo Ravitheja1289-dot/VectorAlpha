@@ -62,7 +62,7 @@ def main() -> None:
     drawdown = metrics["series"]["drawdown"]
     rolling_sharpe = metrics["series"]["rolling_sharpe"]
 
-    # Return attribution (full period, gross to match weight × return definition)
+    # Return attribution (full period, gross to match weight * return definition)
     ret_attr = compute_return_attribution(
         daily_weights=exec_out["daily_weights"],
         returns=returns,

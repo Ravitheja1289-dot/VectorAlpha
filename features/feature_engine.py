@@ -7,12 +7,12 @@ Responsibility:
 
 Constraints:
 - No weights, signals, or rebalancing
-- Features must align with price index and have the same (date × asset) shape
+- Features must align with price index and have the same (date x asset) shape
 
 Implemented features:
 - daily_returns: simple daily returns aligned to price index
 - vol_20d: rolling 20-day volatility of daily returns
-- mom_20d: rolling 20-day momentum (price / price_20d_ago − 1)
+- mom_20d: rolling 20-day momentum (price / price_20d_ago - 1)
 """
 from __future__ import annotations
 
@@ -71,7 +71,7 @@ def rolling_volatility(
 
 
 def rolling_momentum(prices: pd.DataFrame, window: int = 20) -> pd.DataFrame:
-    """Rolling momentum: price / price.shift(window) − 1, aligned to `prices`.
+    """Rolling momentum: price / price.shift(window) - 1, aligned to `prices`.
 
     CRITICAL: Shifted by 1 to avoid look-ahead bias.
     At time t, we see momentum from t-1 looking back to t-window-1.

@@ -54,7 +54,7 @@ def main() -> None:
     backtest = run_backtest(exec_out["daily_weights"], returns, exec_out["transaction_costs"], initial_capital=1.0)
     gross_returns = backtest["gross_returns"]
 
-    # Return attribution (uses gross returns to match weight × return definition)
+    # Return attribution (uses gross returns to match weight * return definition)
     ret_attr = compute_return_attribution(
         daily_weights=exec_out["daily_weights"],
         returns=returns,

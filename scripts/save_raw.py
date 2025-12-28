@@ -51,7 +51,7 @@ def save_symbol(symbol: str, out_dir: Path, loader: YahooLoader, start, end) -> 
 
     out_path = out_dir / f"{symbol}.csv"
     if out_path.exists():
-        print(f"SKIP: {symbol} raw already exists → {out_path} (preserving audit data)")
+        print(f"SKIP: {symbol} raw already exists -> {out_path} (preserving audit data)")
         return True
     try:
         # Save exactly as returned; include index; no renames
@@ -60,7 +60,7 @@ def save_symbol(symbol: str, out_dir: Path, loader: YahooLoader, start, end) -> 
         fail(f"{symbol}: write error: {e}")
         return False
 
-    print(f"Saved {symbol} → {out_path} ({len(df)} rows)")
+    print(f"Saved {symbol} -> {out_path} ({len(df)} rows)")
     return True
 
 
