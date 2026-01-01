@@ -17,7 +17,7 @@ import numpy as np
 import plotly.graph_objects as go
 import plotly.express as px
 from plotly.subplots import make_subplots
-from config import COLOR_POSITIVE, COLOR_NEGATIVE, COLOR_NEUTRAL, PLOT_HEIGHT, TITLE_FONT_SIZE
+from config import COLOR_POSITIVE, COLOR_NEGATIVE, COLOR_NEUTRAL, COLOR_ACCENT, PLOT_HEIGHT, TITLE_FONT_SIZE
 
 
 # ============================================================================
