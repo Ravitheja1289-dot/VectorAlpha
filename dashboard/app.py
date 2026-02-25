@@ -1,21 +1,25 @@
 """
-Vector Alpha Dashboard - Main App
-================================
+Vector Alpha Dashboard - Main App (Enhanced)
+============================================
 
 Streamlit orchestrator for the Vector Alpha research dashboard.
 
-Architecture:
-- Page config (title, layout, logo)
-- Data loading (centralized, cached)
-- Sidebar navigation
-- Component dispatcher
-
-Design Principles:
-- Zero business logic (all precomputed data)
-- Pure orchestration (route to components)
-- Centralized error handling
-- Loud failures (user-visible errors)
+Pages:
+1. Overview - KPIs and system summary
+2. Performance - Returns, distributions, asset-level analysis
+3. Drawdown & Risk - Drawdown, rolling vol, rolling Sharpe
+4. Attribution - Return and risk attribution by asset
+5. Strategy Comparison - Multi-strategy equity curves, metrics, weights
+6. Factor Analysis - PCA factors, loadings, correlation
+7. Stress Test & VaR - Advanced risk, stress testing, tail risk
+8. Real-Time Monitor - Live prices, market status, intraday data
 """
+
+import sys
+from pathlib import Path
+
+# Ensure project root is on path for imports
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
 import streamlit as st
 from config import ASSETS, PROJECT_SUBTITLE
@@ -24,6 +28,10 @@ from components_overview import show_overview
 from components_performance import show_performance
 from components_drawdown_risk import show_drawdown_risk
 from components_attribution import show_attribution
+from components_strategies import show_strategies
+from components_factors import show_factors
+from components_stress import show_stress_test
+from components_realtime import show_realtime
 
 # ============================================================================
 # PAGE CONFIG
@@ -40,15 +48,13 @@ st.title("Vector Alpha Research Dashboard")
 st.markdown(PROJECT_SUBTITLE)
 
 # ============================================================================
-# DATA LOADING (Centralized, Cached)
+# DATA LOADING
 # ============================================================================
 
 @st.cache_data
 def load_data():
-    """Load all data once per session."""
     return load_all_data()
 
-# Try to load data; fail loudly if there's an issue
 try:
     data = load_data()
     st.session_state["data_loaded"] = True
@@ -64,7 +70,16 @@ st.sidebar.title("Navigation")
 
 page = st.sidebar.radio(
     "Select View",
-    ["Overview", "Performance", "Drawdown & Risk", "Attribution"],
+    [
+        "Overview",
+        "Performance",
+        "Drawdown & Risk",
+        "Attribution",
+        "Strategy Comparison",
+        "Factor Analysis",
+        "Stress Test & VaR",
+        "Real-Time Monitor",
+    ],
     index=0,
     key="main_nav"
 )
@@ -76,6 +91,11 @@ st.sidebar.subheader("Portfolio")
 st.sidebar.metric("Assets Tracked", len(ASSETS))
 st.sidebar.metric("Data Points", len(data["returns"]))
 st.sidebar.metric("Period (Years)", f"{(data['returns'].index[-1] - data['returns'].index[0]).days / 365:.1f}")
+
+# Strategy count
+strategy_eq = data.get("strategy_equity_curves")
+if strategy_eq is not None and not strategy_eq.empty:
+    st.sidebar.metric("Strategies", len(strategy_eq.columns))
 
 # ============================================================================
 # PAGE DISPATCHER
@@ -93,6 +113,18 @@ elif page == "Drawdown & Risk":
 elif page == "Attribution":
     show_attribution(data["return_attribution"], data["risk_attribution"])
 
+elif page == "Strategy Comparison":
+    show_strategies(data)
+
+elif page == "Factor Analysis":
+    show_factors(data)
+
+elif page == "Stress Test & VaR":
+    show_stress_test(data)
+
+elif page == "Real-Time Monitor":
+    show_realtime(data)
+
 # ============================================================================
 # FOOTER
 # ============================================================================
@@ -101,7 +133,7 @@ st.markdown("---")
 st.markdown(
     """
     <div style="text-align: center; color: gray; font-size: 12px; margin-top: 2rem;">
-        Vector Alpha Research Dashboard<br>
+        Vector Alpha Research Dashboard | 8 Strategies | 15 Assets | Real-Time Monitoring<br>
         <strong>Disclaimer:</strong> For research and backtesting purposes only. Not investment advice.
     </div>
     """,

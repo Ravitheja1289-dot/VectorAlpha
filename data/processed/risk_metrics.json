@@ -1,8 +1,8 @@
 {
-  "annualized_volatility": 0.2967589589742878,
-  "annualized_return_cagr": 0.27407776872290923,
-  "sharpe_ratio": 0.970956540198662,
-  "max_drawdown": -0.4533066314202894,
-  "drawdown_duration_days": 501,
+  "annualized_volatility": 0.2887328567292717,
+  "annualized_return_cagr": 0.2602926231556184,
+  "sharpe_ratio": 0.952183371822601,
+  "max_drawdown": -0.4361008766291465,
+  "drawdown_duration_days": 526,
   "risk_free_rate": 0.0
 }

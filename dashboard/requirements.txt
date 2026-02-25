@@ -1,17 +1,21 @@
-# Vector Alpha Dashboard - Modular Streamlit App
-# Minimal dependencies for institutional-grade research dashboard
+# Vector Alpha Dashboard - Enhanced Multi-Strategy Research App
+# Full dependencies for institutional-grade research dashboard
 
 # Core framework
 streamlit>=1.28.0              # Web framework for dashboards
 
 # Data manipulation
 pandas>=1.5.0                  # DataFrames, read_parquet
-numpy>=1.24.0                  # Numerical arrays (required by pandas)
+numpy>=1.24.0                  # Numerical arrays
 pyarrow>=13.0.0               # Fast Parquet I/O
 
 # Visualization
-plotly>=5.0.0                  # Interactive charts (lighter than matplotlib)
+plotly>=5.0.0                  # Interactive charts
+matplotlib>=3.7.0             # Static plots for run_experiment.py
 
-# Optional: For extended functionality (not required for base dashboard)
-# scikit-learn>=1.3.0          # ML algorithms (if adding portfolio optimization)
-# scipy>=1.11.0                # Scientific computing (if adding statistical tests)
+# Optimization & Scientific Computing
+scipy>=1.11.0                 # Portfolio optimization (SLSQP), statistics
+scikit-learn>=1.3.0           # PCA factor model
+
+# Real-time data
+yfinance>=0.2.18              # Yahoo Finance API for live/historical data
