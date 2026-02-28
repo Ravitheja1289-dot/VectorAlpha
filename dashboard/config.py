@@ -1,8 +1,8 @@
 """
-Vector Alpha Dashboard - Configuration Constants
-================================================
+Vector Alpha — Portfolio Learning Lab Configuration
+====================================================
 
-All constants, file paths, and configuration in one place for easy maintenance.
+All constants, colors, asset metadata, and educational text.
 """
 
 from pathlib import Path
@@ -13,203 +13,173 @@ from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).parent.parent
 DATA_DIR = PROJECT_ROOT / "data" / "processed"
-OUTPUTS_DIR = PROJECT_ROOT / "outputs"
 
-PARQUET_FILES = {
-    "prices": DATA_DIR / "prices.parquet",
-    "returns": DATA_DIR / "returns.parquet",
-    "return_attribution": DATA_DIR / "return_attribution.parquet",
-    "risk_attribution": DATA_DIR / "risk_attribution.parquet",
-    "risk_metrics": DATA_DIR / "risk_metrics.json",
-    # Multi-strategy files
-    "strategy_equity_curves": DATA_DIR / "strategy_equity_curves.parquet",
-    "strategy_returns": DATA_DIR / "strategy_returns.parquet",
-    "strategy_comparison": DATA_DIR / "strategy_comparison.parquet",
-    "strategy_avg_weights": DATA_DIR / "strategy_avg_weights.parquet",
-    "stress_test_results": DATA_DIR / "stress_test_results.json",
-    "factor_loadings": DATA_DIR / "factor_loadings.parquet",
-    "factor_variance": DATA_DIR / "factor_variance.parquet",
+# ============================================================================
+# ASSET UNIVERSE
+# ============================================================================
+
+ASSET_INFO = {
+    "AAPL":  {"name": "Apple",          "sector": "Technology"},
+    "ADBE":  {"name": "Adobe",          "sector": "Software"},
+    "AMD":   {"name": "AMD",            "sector": "Semiconductors"},
+    "AMZN":  {"name": "Amazon",         "sector": "E-Commerce"},
+    "CRM":   {"name": "Salesforce",     "sector": "Software"},
+    "CSCO":  {"name": "Cisco",          "sector": "Networking"},
+    "GOOGL": {"name": "Alphabet",       "sector": "Technology"},
+    "INTC":  {"name": "Intel",          "sector": "Semiconductors"},
+    "META":  {"name": "Meta",           "sector": "Social Media"},
+    "MSFT":  {"name": "Microsoft",      "sector": "Technology"},
+    "NFLX":  {"name": "Netflix",        "sector": "Streaming"},
+    "NVDA":  {"name": "NVIDIA",         "sector": "Semiconductors"},
+    "ORCL":  {"name": "Oracle",         "sector": "Software"},
+    "QCOM":  {"name": "Qualcomm",       "sector": "Semiconductors"},
+    "TSLA":  {"name": "Tesla",          "sector": "EV / Automotive"},
+}
+
+ASSETS = list(ASSET_INFO.keys())
+
+# ============================================================================
+# DEFAULT SETTINGS
+# ============================================================================
+
+DEFAULT_ASSETS = ["AAPL", "MSFT", "GOOGL", "AMZN", "NVDA"]
+DEFAULT_REBALANCE = "Monthly"
+DEFAULT_COST_BPS = 10.0
+DATE_RANGE_START = "2020-01-01"
+DATE_RANGE_END = "2025-12-31"
+
+REBALANCE_OPTIONS = ["None (Buy & Hold)", "Monthly", "Quarterly", "Yearly"]
+
+REBALANCE_MAP = {
+    "None (Buy & Hold)": "none",
+    "Monthly": "monthly",
+    "Quarterly": "quarterly",
+    "Yearly": "yearly",
 }
 
 # ============================================================================
-# ASSET & PORTFOLIO CONFIGURATION
+# COLORS — Clean educational palette
 # ============================================================================
 
-ASSETS = [
-    "AAPL", "ADBE", "AMD", "AMZN", "CRM",
-    "CSCO", "GOOGL", "INTC", "META", "MSFT",
-    "NFLX", "NVDA", "ORCL", "QCOM", "TSLA"
-]
+COLOR_PRIMARY = "#2563EB"      # Blue
+COLOR_POSITIVE = "#16A34A"     # Green
+COLOR_NEGATIVE = "#DC2626"     # Red
+COLOR_NEUTRAL = "#6B7280"      # Gray
+COLOR_ACCENT = "#F59E0B"       # Amber
+COLOR_BACKGROUND = "#F9FAFB"   # Light gray
+COLOR_CARD_BG = "#FFFFFF"      # White
 
-PORTFOLIO_TOTAL = "TOTAL"
-
-PORTFOLIO_DESCRIPTION = "Multi-strategy quantitative portfolio engine"
-REBALANCING_FREQ = "Weekly"
-TRANSACTION_COSTS_BPS = 10
-DATE_RANGE = "2020-2025"
-RISK_FREE_RATE = 0.02
-
-# ============================================================================
-# STRATEGY CONFIGURATION
-# ============================================================================
-
-STRATEGY_NAMES = [
-    "Equal Weight", "Momentum", "Mean Reversion", "Multi-Factor",
-    "Low Volatility", "Risk Parity", "HRP", "Min Variance",
-]
-
-# Distinct color for each strategy
-STRATEGY_COLORS = {
-    "Equal Weight":   "#1f77b4",
-    "Momentum":       "#ff7f0e",
-    "Mean Reversion": "#2ca02c",
-    "Multi-Factor":   "#d62728",
-    "Low Volatility": "#9467bd",
-    "Risk Parity":    "#8c564b",
-    "HRP":            "#e377c2",
-    "Min Variance":   "#17becf",
-}
-
-# Distinct color per asset (high contrast)
 ASSET_COLORS = {
-    "AAPL":  "#e6194b",
-    "ADBE":  "#3cb44b",
-    "AMD":   "#ffe119",
-    "AMZN":  "#4363d8",
-    "CRM":   "#f58231",
-    "CSCO":  "#911eb4",
-    "GOOGL": "#42d4f4",
-    "INTC":  "#f032e6",
-    "META":  "#bfef45",
-    "MSFT":  "#fabebe",
-    "NFLX":  "#469990",
-    "NVDA":  "#dcbeff",
-    "ORCL":  "#9a6324",
-    "QCOM":  "#800000",
-    "TSLA":  "#000075",
-}
-
-# Line styles per asset for additional differentiation
-ASSET_DASH = {
-    "AAPL": "solid", "ADBE": "dash", "AMD": "dot", "AMZN": "solid",
-    "CRM": "dashdot", "CSCO": "dash", "GOOGL": "solid", "INTC": "dot",
-    "META": "solid", "MSFT": "dash", "NFLX": "dashdot", "NVDA": "solid",
-    "ORCL": "dot", "QCOM": "dash", "TSLA": "solid",
+    "AAPL":  "#2563EB",
+    "ADBE":  "#7C3AED",
+    "AMD":   "#DC2626",
+    "AMZN":  "#F59E0B",
+    "CRM":   "#0891B2",
+    "CSCO":  "#059669",
+    "GOOGL": "#4F46E5",
+    "INTC":  "#0284C7",
+    "META":  "#1D4ED8",
+    "MSFT":  "#16A34A",
+    "NFLX":  "#E11D48",
+    "NVDA":  "#65A30D",
+    "ORCL":  "#B91C1C",
+    "QCOM":  "#7E22CE",
+    "TSLA":  "#EA580C",
 }
 
 # ============================================================================
-# STREAMLIT PAGE CONFIGURATION
+# CHART SETTINGS
 # ============================================================================
 
-PAGE_TITLE = "Vector Alpha Research Dashboard"
-PAGE_ICON = "chart-line"
-LAYOUT = "wide"
-SIDEBAR_STATE = "expanded"
-INITIAL_SIDEBAR_STATE = "expanded"
-
-# ============================================================================
-# VISUALIZATION CONFIGURATION
-# ============================================================================
-
-ROLLING_WINDOWS = [63, 126, 252]
-DEFAULT_ROLLING_WINDOW = 63
-
-COLOR_POSITIVE = "#1f77b4"
-COLOR_NEGATIVE = "#d62728"
-COLOR_NEUTRAL = "#7f7f7f"
-COLOR_ACCENT = "#ff7f0e"
-
-PLOT_HEIGHT = 600
-PLOT_FONT_SIZE = 12
+PLOT_HEIGHT = 450
+PLOT_FONT_SIZE = 13
 TITLE_FONT_SIZE = 16
+CHART_TEMPLATE = "plotly_white"
+CHART_MARGIN = dict(l=40, r=20, t=50, b=40)
 
 # ============================================================================
-# PERFORMANCE METRICS
+# EDUCATIONAL TEXT
 # ============================================================================
 
-DISPLAY_METRICS = {
-    "annualized_return_cagr": "CAGR (%)",
-    "annualized_volatility": "Volatility (%)",
-    "sharpe_ratio": "Sharpe Ratio",
-    "max_drawdown": "Max Drawdown (%)",
-    "drawdown_duration_days": "Drawdown Duration (days)",
-}
-
-ADVANCED_METRICS = {
-    "sortino": "Sortino Ratio",
-    "calmar": "Calmar Ratio",
-    "omega": "Omega Ratio",
-    "var_95": "VaR (95%)",
-    "cvar_95": "CVaR (95%)",
-    "skewness": "Skewness",
-    "kurtosis": "Excess Kurtosis",
-}
-
-# ============================================================================
-# SECTION VISIBILITY
-# ============================================================================
-
-SHOW_OVERVIEW = True
-SHOW_PERFORMANCE = True
-SHOW_DRAWDOWN_RISK = True
-SHOW_ATTRIBUTION = True
-SHOW_STRATEGIES = True
-SHOW_FACTORS = True
-SHOW_REALTIME = True
-SHOW_SYSTEM_INFO = True
-
-# ============================================================================
-# CACHE & PERFORMANCE
-# ============================================================================
-
-CACHE_TTL_SECONDS = 3600
-
-# ============================================================================
-# VALIDATION RULES
-# ============================================================================
-
-MIN_ROWS = {
-    "prices": 250,
-    "returns": 250,
-    "return_attribution": 250,
-    "risk_attribution": 10,
-}
-
-REQUIRED_COLUMNS = {
-    "prices": ["NVDA", "TSLA"],
-    "returns": ["NVDA"],
-    "return_attribution": ["portfolio_return"],
-    "risk_attribution": ["portfolio_volatility"],
-}
-
-# ============================================================================
-# TEXT CONTENT
-# ============================================================================
-
-PROJECT_SUBTITLE = (
-    "Institutional-grade multi-strategy portfolio backtesting, attribution & risk analytics. "
-    "8 strategies | 15 assets | Real-time monitoring."
+APP_TITLE = "Vector Alpha"
+APP_SUBTITLE = "Interactive Portfolio Lab for Finance Students"
+APP_TAGLINE = (
+    "Experiment with portfolios and see how risk, rebalancing, "
+    "and diversification actually behave in real markets."
 )
 
-OVERVIEW_DESCRIPTION = f"""
-**Vector Alpha** is an institutional-grade multi-strategy quantitative portfolio engine.
-
-**Portfolio Details:**
-- **Strategies**: {len(STRATEGY_NAMES)} active strategies (Momentum, Mean Reversion, Multi-Factor, Low-Vol, Risk Parity, HRP, Min Variance + Equal Weight baseline)
-- **Rebalancing**: {REBALANCING_FREQ}
-- **Universe**: {len(ASSETS)} assets (Tech + Enterprise Software)
-- **Period**: {DATE_RANGE}
-- **Transaction Costs**: {TRANSACTION_COSTS_BPS} bps per trade
-- **Features**: RSI, Bollinger Bands, Momentum 12-1, Z-Score, Rolling Vol
-- **Optimization**: Mean-Variance, Risk Parity, HRP (Lopez de Prado)
-- **Risk**: VaR, CVaR, Sortino, Calmar, Omega, Stress Testing, Factor Model
-"""
-
-ERROR_DATA_NOT_FOUND = (
-    f"Data files not found in {DATA_DIR}. "
-    "Run `python run_experiment.py` to generate outputs."
+LANDING_DESCRIPTION = (
+    "Build a portfolio, simulate performance, and understand where "
+    "returns and risks come from — visually and intuitively."
 )
 
-ERROR_MISSING_FILE = "Missing file: {filename}. Expected at {path}."
-ERROR_INDEX_MISMATCH = "Index mismatch between {file1} and {file2}. Cannot align data."
-ERROR_EMPTY_DATA = "File {filename} is empty (0 rows). Check data generation."
+SECTION_HEADERS = {
+    "build": "Build Your Portfolio",
+    "results": "See What Happened",
+    "insights": "What This Means",
+    "risk_explorer": "Risk Explorer",
+    "return_breakdown": "Return Breakdown",
+    "advanced": "Advanced Mode",
+}
+
+SECTION_DESCRIPTIONS = {
+    "build": "Select assets, set weights, and choose your rebalancing strategy.",
+    "results": "Visualize how your portfolio performed over time.",
+    "insights": "Plain-English explanations of what drove your results.",
+    "risk_explorer": "Understand where your portfolio risk actually comes from.",
+    "return_breakdown": "See which assets helped and which ones hurt.",
+    "advanced": "Detailed analytics for deeper exploration.",
+}
+
+# Concept definitions shown as tooltips or expandable text
+CONCEPT_DEFINITIONS = {
+    "sharpe_ratio": (
+        "The Sharpe Ratio measures return per unit of risk. "
+        "A ratio above 1.0 is generally considered good. "
+        "Higher means better risk-adjusted performance."
+    ),
+    "max_drawdown": (
+        "Maximum drawdown is the largest peak-to-trough decline. "
+        "It tells you the worst loss you would have experienced "
+        "if you bought at the peak and sold at the bottom."
+    ),
+    "volatility": (
+        "Volatility measures how much returns fluctuate. "
+        "Higher volatility means more uncertainty. "
+        "It's the standard deviation of returns, annualized."
+    ),
+    "cagr": (
+        "CAGR is the smoothed annual growth rate. "
+        "It shows what your portfolio would have returned each year "
+        "if it grew at a steady rate."
+    ),
+    "rebalancing": (
+        "Rebalancing means resetting your portfolio back to target weights. "
+        "Without it, winning assets grow to dominate your portfolio, "
+        "increasing concentration risk."
+    ),
+    "diversification": (
+        "Diversification means spreading risk across different assets. "
+        "True diversification requires low correlation between assets, "
+        "not just owning many of them."
+    ),
+    "risk_contribution": (
+        "Risk contribution shows how much each asset adds to total portfolio risk. "
+        "An asset can have a small weight but contribute a lot of risk "
+        "if it's volatile and correlated with other holdings."
+    ),
+    "weight_drift": (
+        "Weight drift happens because asset prices change at different rates. "
+        "If one asset goes up a lot, it becomes a larger share of your portfolio. "
+        "This can make your portfolio riskier than intended."
+    ),
+}
+
+# ============================================================================
+# DIVERSIFICATION SCORE PARAMETERS
+# ============================================================================
+
+# Weights for composite diversification score (0-10)
+DIVSCORE_WEIGHT_HHI = 0.30       # Herfindahl index (weight concentration)
+DIVSCORE_WEIGHT_CORR = 0.35      # Average pairwise correlation
+DIVSCORE_WEIGHT_RISKCONC = 0.35  # Risk concentration (top-2 share)
